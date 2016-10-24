@@ -22,6 +22,7 @@ public class TypeScriptAngularClientCodegen extends AbstractTypeScriptClientCode
 		supportingFiles.add(new SupportingFile("api.d.mustache", apiPackage().replace('.', File.separatorChar), "api.d.ts"));
 		supportingFiles.add(new SupportingFile("git_push.sh.mustache", "", "git_push.sh"));
 		supportingFiles.add(new SupportingFile("gitignore", "", ".gitignore"));
+		supportingFiles.add(new SupportingFile("configuration.mustache", "", "configuration.ts"));
 
 	}
 	

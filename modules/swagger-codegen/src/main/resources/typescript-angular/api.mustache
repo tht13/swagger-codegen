@@ -15,6 +15,7 @@ namespace {{package}} {
     export class {{classname}} {
         protected basePath = '{{basePath}}';
         public defaultHeaders : any = {};
+        public configuration: Configuration = new Configuration();
 
         static $inject: string[] = ['$http', '$httpParamSerializer', 'basePath'];
 
@@ -75,6 +76,33 @@ namespace {{package}} {
             formParams['{{baseName}}'] = {{paramName}};
 
 {{/formParams}}
+{{#authMethods}}
+        // authentication ({{name}}) required
+{{#isApiKey}}
+{{#isKeyInHeader}}
+        if (this.configuration.apiKey && this.configuration.apiKey.{{keyParamName}}) {
+            headerParams['{{keyParamName}}'] = this.configuration.apiKey.{{keyParamName}};
+        }
+{{/isKeyInHeader}}
+{{#isKeyInQuery}}
+        if (this.configuration.apiKey && this.configuration.apiKey.{{keyParamName}}) {
+            queryParameters['{{keyParamName}}'] = this.configuration.apiKey.{{keyParamName}};
+        }
+{{/isKeyInQuery}}
+{{/isApiKey}}
+{{#isBasic}}
+        // http basic authentication required
+        if (this.configuration.username || this.configuration.password) {
+            headerParams['Authorization'] = 'Basic ' + btoa(this.configuration.username + ':' + this.configuration.password);
+        }
+{{/isBasic}}
+{{#isOAuth}}
+        // oauth required
+        if (this.configuration.accessToken) {
+            headerParams['Authorization'] = 'Bearer ' + this.configuration.accessToken;
+        }
+{{/isOAuth}}
+{{/authMethods}}
             let httpRequestParams: any = {
                 method: '{{httpMethod}}',
                 url: localVarPath,
